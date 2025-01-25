@@ -1,9 +1,10 @@
 using Unity.Netcode;
+using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class NetworkSceneManager : MonoBehaviour
+public class NetworkSceneManager : Singleton<NetworkSceneManager>
 {
     // Buttons
     [SerializeField]
@@ -57,14 +58,31 @@ public class NetworkSceneManager : MonoBehaviour
 
     public void fn_GoToScene(string scene)
     {
-        Debug.Log($"Try Go To Scene: '{scene}'");
-        NetworkManager.Singleton.SceneManager.LoadScene(scene, LoadSceneMode.Single);
+        if (NetworkManager.Singleton.SceneManager != null)
+        {
+            Debug.Log($"Try Go To Scene: '{scene}'");
+            NetworkManager.Singleton.SceneManager.LoadScene(scene, LoadSceneMode.Single);
+        }
+        else
+        {
+            Debug.LogWarning("Network Not Established");
+            UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(scene);
+        }         
     }
 
     public void fn_GoToMainMenu()
     {
         Debug.Log("Home Scene Btn Called, loading next scene");
-        NetworkManager.Singleton.SceneManager.LoadScene(SceneName(0), LoadSceneMode.Single);
+        
+        if (NetworkManager.Singleton.SceneManager != null)
+        {
+            NetworkManager.Singleton.SceneManager.LoadScene(SceneName(0), LoadSceneMode.Single);
+        }
+        else
+        {
+            Debug.LogWarning("Network Not Established");
+            UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(0);
+        }
     }
 
     public void fn_SceneSwitch_NextScene()
