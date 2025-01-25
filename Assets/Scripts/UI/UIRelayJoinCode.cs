@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,7 +20,23 @@ public class UIRelayJoinCode : MonoBehaviour
 
     private void Start()
     {
-        _relayCode = RelayManager.Instance.RelayJoinCode; //NOTE: may need to update this to be based on an update event call
+        // use network variable for clients
+        _relayCode = LobbySharedJoinCode.Instance.relayJoinCode;
+        UpdateLobyJoinCodeTxt();
+
+        // bind to event encase updated
+        LobbySharedJoinCode.Instance.OnRelayCodeChanged += Handle_OnRelayCodeChnage;
+  
+    }
+
+    private void Handle_OnRelayCodeChnage(object sender, EventArgs e)
+    {
+        _relayCode = LobbySharedJoinCode.Instance.relayJoinCode;
+        UpdateLobyJoinCodeTxt();
+    }
+
+    private void UpdateLobyJoinCodeTxt()
+    {
         _relayCodeTxt.text = _relayCode;
     }
 

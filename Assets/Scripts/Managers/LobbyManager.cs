@@ -8,16 +8,13 @@ public class LobbyManager : NetworkSingleton<LobbyManager>
     public event EventHandler OnStateChanged;
     public event EventHandler OnReadyChanged;
 
-    [SerializeField] private Transform playerPrefab;
-
-    private bool isLocalPlayerReady;
-
     // Network Variable 
     private NetworkVariable<int> numberOfPlayersNV = new NetworkVariable<int>();
     private NetworkVariable<int> numberOfReadyPlayersNV = new NetworkVariable<int>();
 
     // local dictionary
     private Dictionary<ulong, bool> playerReadyDictionary;
+    private bool isLocalPlayerReady;
 
     #region Unity Native Functions
     private void Awake()
@@ -26,7 +23,7 @@ public class LobbyManager : NetworkSingleton<LobbyManager>
     }
     public override void OnNetworkSpawn()
     {
-        Debug.Log("PreGameLobbyManager: OnNetworkSpawn");
+        Debug.Log("LobbyManager: OnNetworkSpawn");
         base.OnNetworkSpawn();
 
         if (IsServer)
